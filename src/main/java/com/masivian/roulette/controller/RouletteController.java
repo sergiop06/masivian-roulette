@@ -60,7 +60,6 @@ public class RouletteController {
 				}else {
 					return false;
 				}
-				
 			}
 			
 			return rouletteService.makeBet(newBet, idRoulette);

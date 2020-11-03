@@ -78,7 +78,6 @@ public class RouletteServiceImpl implements RouletteService {
 	}
 
 	public List<Bet> closeRoulette(long idRoulette) {
-
 		Random random = new Random();
 		int winnerNumber = random.nextInt(36);
 		String winnerColor;
@@ -116,22 +115,27 @@ public class RouletteServiceImpl implements RouletteService {
 			}
 
 		}
+		
 		return null;
 	}
 
 	public Roulette findRoulette(long idRoulette) {
 		Optional<Roulette> rouletteFound = rouletteRepository.findById(idRoulette);
 		if (rouletteFound.isPresent()) {
+			
 			return rouletteFound.get();
 		}
+		
 		return null;
 	}
 
 	public List<Roulette> findAllRoulettes() {
 		List<Roulette> rouletteFound = (List<Roulette>) rouletteRepository.findAll();
 		if (!rouletteFound.isEmpty()) {
+			
 			return rouletteFound;
 		}
+		
 		return null;
 	}
 	
@@ -139,8 +143,10 @@ public class RouletteServiceImpl implements RouletteService {
 		Optional<Roulette> rouletteFound = rouletteRepository.findById(idRoulette);
 		if(rouletteFound.isPresent()) {
 			rouletteRepository.deleteById(idRoulette);
+			
 			return true;
 		}
+		
 		return false;
 		
 	}
