@@ -19,12 +19,9 @@ public class ClientServiceImpl implements ClientService{
 	public Long createClient(Client client) {
 		
 		if(client != null) {
-			System.out.println("Clientservice impl about to save line19");
 			Client savedClient = clientRepository.save(client);
-			System.out.println("after client repository save");
 			return savedClient.getId();
 		}else {
-			System.out.println("client service create client is null");
 			return (long)-1;
 		}
 	}

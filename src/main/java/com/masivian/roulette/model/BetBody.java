@@ -8,7 +8,6 @@ public class BetBody {
 	private int number;
 	private String color;
 	private long quantity;
-	private long idRoulette;
-	private boolean isBetNumber;
+	private boolean betNumber;
 	
 }

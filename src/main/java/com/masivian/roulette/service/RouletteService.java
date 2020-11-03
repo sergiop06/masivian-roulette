@@ -12,5 +12,6 @@ public interface RouletteService {
 	boolean makeBet(Bet bet, Long idRoulette);
 	List<Bet> closeRoulette(long idRoulette);
 	Roulette findRoulette(long idRoulette);
+	boolean deleteRoulette(long idRoulette);
 	List<Roulette> findAllRoulettes();
 }

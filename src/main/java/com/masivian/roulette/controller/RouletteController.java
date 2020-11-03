@@ -3,6 +3,7 @@ package com.masivian.roulette.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,22 +23,22 @@ public class RouletteController {
 	@Autowired
 	RouletteService rouletteService;
 	
-	@PostMapping(value = "/createRoulette", produces = "application/json")
+	@PostMapping(value = "/roulettes", produces = "application/json")
 	public @ResponseBody Long createRoulette() {
 		
 		return rouletteService.createRouelette();
 	}
 	
-	@PostMapping(value = "/openRoulette/{idRoulette}", produces = "application/json")
+	@PostMapping(value = "/roulettes/{idRoulette}/open", produces = "application/json")
 	public @ResponseBody boolean openRoulette(@PathVariable("idRoulette") long idRoulette) {
-		
 		return rouletteService.openRoulette(idRoulette);	
 	}
 	
-	@PostMapping(value = "/makeBet", consumes = "application/json", produces = "application/json")
+	@PostMapping(value = "/roulettes/{idRoulette}/makebet", consumes = "application/json", produces = "application/json")
 	public @ResponseBody boolean makeBet(
 			@RequestHeader(name="CLIENT-ID",required = true) long clientId,
-			@RequestBody BetBody bet) {
+			@RequestBody BetBody bet,
+			@PathVariable("idRoulette") long idRoulette) {
 		
 		if(bet.getQuantity()<=10000) {
 			Bet newBet= new Bet();
@@ -54,26 +55,37 @@ public class RouletteController {
 				}else return false;
 			}else {
 				newBet.setNumber(-1);
-				newBet.setColor(bet.getColor());
+				if(newBet.getColor()!=null && newBet.getColor()!="") {
+					newBet.setColor(bet.getColor());
+				}else {
+					return false;
+				}
+				
 			}
 			
-			return rouletteService.makeBet(newBet, bet.getIdRoulette());
+			return rouletteService.makeBet(newBet, idRoulette);
 			
 		}else return false;
 	}
 	
-	@PostMapping(value = "/closeRoulette/{idRoulette}", produces = "application/json")
+	@PostMapping(value = "/roulettes/{idRoulette}/close", produces = "application/json")
 	public @ResponseBody List<Bet> closeRoulette(@PathVariable("idRoulette")long idRoulette){
 		return rouletteService.closeRoulette(idRoulette);
 	}
 	
-	@GetMapping(value = "/findRoulette/{idRoulette}", produces = "application/json")
+	@GetMapping(value = "/roulettes/{idRoulette}", produces = "application/json")
 	public @ResponseBody Roulette findRoulette(@PathVariable("idRoulette")long idRoulette){
 		return rouletteService.findRoulette(idRoulette);
 	}
 	
-	@GetMapping(value = "/findAllRoulettes", produces = "application/json")
+	@GetMapping(value = "/roulettes", produces = "application/json")
 	public @ResponseBody List<Roulette> findAllRoulettes(){
 		return rouletteService.findAllRoulettes();
 	}
+	
+	@DeleteMapping(value = "/roulettes/{idRoulette}")
+	public @ResponseBody boolean deleteRoulette(@PathVariable("idRoulette")long idRoulette){
+		return rouletteService.deleteRoulette(idRoulette);
+	}
+	
 }

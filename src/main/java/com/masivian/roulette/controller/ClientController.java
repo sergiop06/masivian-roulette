@@ -3,6 +3,7 @@ package com.masivian.roulette.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class ClientController {
 	@Autowired
 	ClientService clientService;
 	
-	@PostMapping(value = "/createClient", consumes = "application/json", produces = "application/json")
+	@PostMapping(value = "/clients", consumes = "application/json", produces = "application/json")
 	public @ResponseBody Long createClient(@RequestBody Client client ) {
 			
 		if(client != null) {
@@ -29,16 +30,21 @@ public class ClientController {
 		return (long) -1;
 	}
 	
-	@GetMapping(value = "/findClient/{idClient}", produces = "application/json")
+	@GetMapping(value = "/clients/{idClient}", produces = "application/json")
 	public @ResponseBody Client findClient(@PathVariable("idClient") long idClient ) {
 		
 		return clientService.findClient(idClient);
 	}
 	
-	@GetMapping(value = "/findAllClients", produces = "application/json")
+	@GetMapping(value = "/clients", produces = "application/json")
 	public @ResponseBody List<Client> findAllClients() {
 		
 		return clientService.findAllClients();
+	}
+	
+	@DeleteMapping(value = "/clients/{idClient}")
+	public @ResponseBody boolean deleteRoulette(@PathVariable("idClient")long idClient){
+		return clientService.deleteClient(idClient);
 	}
 	
 }

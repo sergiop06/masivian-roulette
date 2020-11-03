@@ -41,12 +41,15 @@ public class RouletteServiceImpl implements RouletteService {
 		Optional<Roulette> rouletteTry = rouletteRepository.findById(id);
 		if (rouletteTry.isPresent()) {
 			Roulette roulette = rouletteTry.get();
-			roulette.setOpen(true);
-			Roulette savedRoulette = rouletteRepository.save(roulette);
-			if (savedRoulette.isOpen() && roulette.getId() == savedRoulette.getId()) {
+			if(!roulette.isOpen()) {
+				roulette.setOpen(true);
+				Roulette savedRoulette = rouletteRepository.save(roulette);
+				if (savedRoulette.isOpen() && roulette.getId() == savedRoulette.getId()) {
 
-				return true;
+					return true;
+				}
 			}
+			
 		}
 
 		return false;
@@ -56,18 +59,19 @@ public class RouletteServiceImpl implements RouletteService {
 		Optional<Roulette> rouletteFind = this.rouletteRepository.findById(idRoulette);
 		if (rouletteFind.isPresent()) {
 			Roulette roulette = rouletteFind.get();
-			roulette.setCountBets(roulette.getCountBets() + 1);
-			bet.setId((long) roulette.getCountBets());
-			if (roulette.getBets() == null) {
-				roulette.setBets(new ArrayList<Bet>());
-			}
-			roulette.getBets().add(bet);
-			Roulette savedRoulette = rouletteRepository.save(roulette);
-			if (savedRoulette.isOpen() && (roulette.getId() == savedRoulette.getId())) {
+			if(roulette.isOpen()) {
+				roulette.setCountBets(roulette.getCountBets() + 1);
+				bet.setId((long) roulette.getCountBets());
+				if (roulette.getBets() == null) {
+					roulette.setBets(new ArrayList<Bet>());
+				}
+				roulette.getBets().add(bet);
+				Roulette savedRoulette = rouletteRepository.save(roulette);
+				if (savedRoulette.isOpen() && (roulette.getId() == savedRoulette.getId())) {
 
-				return true;
+					return true;
+				}
 			}
-
 		}
 
 		return false;

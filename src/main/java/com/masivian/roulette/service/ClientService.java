@@ -10,6 +10,7 @@ public interface ClientService {
 	public Long createClient(Client client);
 	public void updateClientWinner(long idClient,long amountWon,long amountBet);
 	public Client findClient(long idClient);
+	public boolean deleteClient(long idClient);
 	public List<Client> findAllClients();
 
 }
