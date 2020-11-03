@@ -1,6 +1,8 @@
 package com.masivian.roulette.model;
 
 
+import java.math.BigDecimal;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -13,6 +15,6 @@ public class Client {
 	@Id
 	private Long id;
 	private String username;
-	private long credit; 
+	private BigDecimal credit; 
 	
 }

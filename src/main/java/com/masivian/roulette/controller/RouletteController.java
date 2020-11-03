@@ -1,5 +1,6 @@
 package com.masivian.roulette.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,8 @@ public class RouletteController {
 			@RequestHeader(name="CLIENT-ID",required = true) long clientId,
 			@RequestBody BetBody bet,
 			@PathVariable("idRoulette") long idRoulette) {
-		
-		if(bet.getQuantity()<=10000) {
+		int checkTopBet = bet.getQuantity().compareTo(new BigDecimal(10000));
+		if(checkTopBet==-1 || checkTopBet==0 ) {
 			Bet newBet= new Bet();
 			newBet.setClientId(clientId);
 			newBet.setQuantity(bet.getQuantity());
@@ -55,11 +56,9 @@ public class RouletteController {
 				}else return false;
 			}else {
 				newBet.setNumber(-1);
-				if(newBet.getColor()!=null && newBet.getColor()!="") {
+				if(bet.getColor()!=null && bet.getColor()!="") {
 					newBet.setColor(bet.getColor());
-				}else {
-					return false;
-				}
+				}else return false;
 			}
 			
 			return rouletteService.makeBet(newBet, idRoulette);

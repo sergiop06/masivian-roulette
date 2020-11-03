@@ -1,5 +1,6 @@
 package com.masivian.roulette.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -100,13 +101,15 @@ public class RouletteServiceImpl implements RouletteService {
 				for (Bet bet : roulette.getBets()) {
 					if (bet.getNumber() == winnerNumber) {
 						bet.setWinner(true);
-						bet.setAmountWon((bet.getQuantity() * 5));
+						BigDecimal amountWon = new BigDecimal(5).multiply(bet.getQuantity());
+						bet.setAmountWon(amountWon);
 					} else if (bet.getColor().equalsIgnoreCase(winnerColor)) {
 						bet.setWinner(true);
-						bet.setAmountWon((bet.getQuantity() * (long) 1.8));
+						BigDecimal amountWon = new BigDecimal(1.8).multiply(bet.getQuantity());
+						bet.setAmountWon(amountWon);
 					} else {
 						bet.setWinner(false);
-						bet.setAmountWon(0);
+						bet.setAmountWon(new BigDecimal(0));
 					}
 					clientService.updateClientWinner(bet.getClientId(), bet.getAmountWon(), bet.getQuantity());
 				}

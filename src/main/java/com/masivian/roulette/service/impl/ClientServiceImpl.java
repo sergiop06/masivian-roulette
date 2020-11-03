@@ -1,5 +1,6 @@
 package com.masivian.roulette.service.impl;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,37 +12,37 @@ import com.masivian.roulette.repositories.ClientRepository;
 import com.masivian.roulette.service.ClientService;
 
 @Service
-public class ClientServiceImpl implements ClientService{
+public class ClientServiceImpl implements ClientService {
 	@Autowired
-	private ClientRepository clientRepository; 
-	
+	private ClientRepository clientRepository;
+
 	@Override
 	public Long createClient(Client client) {
-		
-		if(client != null) {
+
+		if (client != null) {
 			Client savedClient = clientRepository.save(client);
 			return savedClient.getId();
-		}else {
-			return (long)-1;
+		} else {
+			return (long) -1;
 		}
 	}
-	
-	public void updateClientWinner(long idClient,long amountWon,long amountBet) {
-		Optional<Client>clientFound = clientRepository.findById(idClient);
-		if(clientFound.isPresent()) {
+
+	public void updateClientWinner(long idClient, BigDecimal amountWon, BigDecimal amountBet) {
+		Optional<Client> clientFound = clientRepository.findById(idClient);
+		if (clientFound.isPresent()) {
 			Client client = clientFound.get();
-			if(amountWon == 0) {
-				client.setCredit(client.getCredit()-amountBet);
-			}else {
-				client.setCredit(client.getCredit()+amountWon);
+			if (amountWon.compareTo(BigDecimal.ZERO) == 0) {
+				client.setCredit(client.getCredit().subtract(amountBet));
+			} else {
+				client.setCredit(client.getCredit().add(amountWon));
 			}
-			clientRepository.save(client);	
+			clientRepository.save(client);
 		}
 	}
 
 	public Client findClient(long idClient) {
-		Optional<Client>clientFound = clientRepository.findById(idClient);
-		if(clientFound.isPresent()) {
+		Optional<Client> clientFound = clientRepository.findById(idClient);
+		if (clientFound.isPresent()) {
 			return clientFound.get();
 		}
 		return null;
@@ -49,15 +50,15 @@ public class ClientServiceImpl implements ClientService{
 
 	public List<Client> findAllClients() {
 		List<Client> clients = (List<Client>) clientRepository.findAll();
-		if(!clients.isEmpty()) {
+		if (!clients.isEmpty()) {
 			return clients;
 		}
 		return null;
 	}
-	
+
 	public boolean deleteClient(long idClient) {
 		Optional<Client> clientFound = clientRepository.findById(idClient);
-		if(clientFound.isPresent()) {
+		if (clientFound.isPresent()) {
 			clientRepository.deleteById(idClient);
 			return true;
 		}

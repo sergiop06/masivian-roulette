@@ -1,6 +1,8 @@
 package com.masivian.roulette.model;
 
 
+import java.math.BigDecimal;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
@@ -15,8 +17,8 @@ public class Bet {
 	private long clientId;
 	private int number;
 	private String color;
-	private long quantity;
+	private BigDecimal quantity;
 	private boolean winner;
-	private long amountWon;
+	private BigDecimal amountWon;
 	
 }
