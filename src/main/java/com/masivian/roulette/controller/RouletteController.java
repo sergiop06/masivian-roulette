@@ -1,0 +1,79 @@
+package com.masivian.roulette.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.masivian.roulette.model.Bet;
+import com.masivian.roulette.model.BetBody;
+import com.masivian.roulette.model.Roulette;
+import com.masivian.roulette.service.RouletteService;
+
+@RestController
+public class RouletteController {
+	
+	@Autowired
+	RouletteService rouletteService;
+	
+	@PostMapping(value = "/createRoulette", produces = "application/json")
+	public @ResponseBody Long createRoulette() {
+		
+		return rouletteService.createRouelette();
+	}
+	
+	@PostMapping(value = "/openRoulette/{idRoulette}", produces = "application/json")
+	public @ResponseBody boolean openRoulette(@PathVariable("idRoulette") long idRoulette) {
+		
+		return rouletteService.openRoulette(idRoulette);	
+	}
+	
+	@PostMapping(value = "/makeBet", consumes = "application/json", produces = "application/json")
+	public @ResponseBody boolean makeBet(
+			@RequestHeader(name="CLIENT-ID",required = true) long clientId,
+			@RequestBody BetBody bet) {
+		
+		if(bet.getQuantity()<=10000) {
+			Bet newBet= new Bet();
+			newBet.setClientId(clientId);
+			newBet.setQuantity(bet.getQuantity());
+			if(bet.isBetNumber()) {
+				if(bet.getNumber() >0 && bet.getNumber()<37) {
+					newBet.setNumber(bet.getNumber());
+					if(bet.getNumber()%2 == 0) {
+						newBet.setColor("red");
+					}else {
+						newBet.setColor("black");
+					}
+				}else return false;
+			}else {
+				newBet.setNumber(-1);
+				newBet.setColor(bet.getColor());
+			}
+			
+			return rouletteService.makeBet(newBet, bet.getIdRoulette());
+			
+		}else return false;
+	}
+	
+	@PostMapping(value = "/closeRoulette/{idRoulette}", produces = "application/json")
+	public @ResponseBody List<Bet> closeRoulette(@PathVariable("idRoulette")long idRoulette){
+		return rouletteService.closeRoulette(idRoulette);
+	}
+	
+	@GetMapping(value = "/findRoulette/{idRoulette}", produces = "application/json")
+	public @ResponseBody Roulette findRoulette(@PathVariable("idRoulette")long idRoulette){
+		return rouletteService.findRoulette(idRoulette);
+	}
+	
+	@GetMapping(value = "/findAllRoulettes", produces = "application/json")
+	public @ResponseBody List<Roulette> findAllRoulettes(){
+		return rouletteService.findAllRoulettes();
+	}
+}
